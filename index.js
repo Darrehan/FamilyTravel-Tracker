@@ -14,7 +14,7 @@ db.connect();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
-
+// Here For Default Rendering user 1
 let currentUserId = 1;
 
 let users = [
@@ -24,6 +24,7 @@ let users = [
 
 async function checkVisisted() {
   const result = await db.query(
+    // one to many relation ship😒
     "SELECT country_code FROM visited_countries JOIN users ON users.id = user_id WHERE user_id = $1; ",
     [currentUserId]
   );
@@ -52,7 +53,7 @@ app.get("/", async (req, res) => {
 });
 app.post("/add", async (req, res) => {
   const input = req.body["country"];
-  const currentUser = await getCurrentUser();
+  // const currentUser = await getCurrentUser();
 
   try {
     const result = await db.query(
@@ -70,9 +71,21 @@ app.post("/add", async (req, res) => {
       res.redirect("/");
     } catch (err) {
       console.log(err);
+      const countries = await checkVisisted();
+      res.render("index.ejs", {
+        countries: countries,
+        total: countries.length,
+        error: "Country has already been added, try again.",
+      });
     }
   } catch (err) {
     console.log(err);
+    const countries = await checkVisisted();
+    res.render("index.ejs", {
+      countries: countries,
+      total: countries.length,
+      error: "Country name does not exist, try again.",
+    });
   }
 });
 

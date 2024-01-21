@@ -10,7 +10,7 @@
 
 <body>
   <form class="tab-view tab-view-height-auto" action="/user" method="post">
-    <% users.forEach(function(user) { %>
+    <% users.forEach(function (user) { %>
       <input type="submit" name="user" value="<%= user.id %>" id="<%= user.id %>">
       <label for="<%= user.id %>" style="background-color: <%= user.color %>;">
         <%= user.name %>
