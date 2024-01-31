@@ -11,15 +11,15 @@ const db = new pg.Client({
   port: 5432,
 });
 db.connect();
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 // Here For Default Rendering user 1
 let currentUserId = 1;
 
 let users = [
-  { id: 1, name: "Rehan", color: "teal" },
-  { id: 2, name: "Faizan", color: "powderblue" },
+  // { id: 1, name: "Rehan", color: "teal" },
+  // { id: 2, name: "Faizan", color: "powderblue" },
+  // This is for Note How the Result schema looks like 
 ];
 
 async function checkVisisted() {
@@ -53,14 +53,13 @@ app.get("/", async (req, res) => {
 });
 app.post("/add", async (req, res) => {
   const input = req.body["country"];
-  // const currentUser = await getCurrentUser();
+  const currentUser = await getCurrentUser();
 
   try {
     const result = await db.query(
       "SELECT country_code FROM countries WHERE LOWER(country_name) LIKE '%' || $1 || '%';",
       [input.toLowerCase()]
     );
-
     const data = result.rows[0];
     const countryCode = data.country_code;
     try {
